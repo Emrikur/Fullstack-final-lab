@@ -1,6 +1,29 @@
+@font-face {
+  font-family: pageFontBold;
+  src: url("./assets/alvera-circle-font/AlveraDemoBoldSquare-8OwLB.otf");
+}
+@font-face {
+  font-family: pageFont;
+  src: url("./assets/alvera-circle-font/AlveraDemoRegularSquare-rvpm9.otf");
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+
+
+body{
+  background-color: #13042c;
+  color: #DB884D;
+  font-family: pageFont;
+}
+
+
+
+@media only screen and (orientation: landscape) {
+
 }

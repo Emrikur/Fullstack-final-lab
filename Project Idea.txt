@@ -1,0 +1,9 @@
+"Dream Lore"
+
+En app där man kan skriva ner sina drömmar
+
+Funktioner:
+
+* Login/logout
+* Skapa "blogginlägg".
+* redigera inlägg
