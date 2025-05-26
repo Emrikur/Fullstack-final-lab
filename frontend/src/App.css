@@ -17,8 +17,9 @@
 
 
 body{
-  background-color: #13042c;
-  color: #DB884D;
+  /* background-color: #13042c; */
+  background-image: linear-gradient(0deg, #13042c 10%, #3f2964 90%);
+  color: #f2771f;
   font-family: pageFont;
 }
 

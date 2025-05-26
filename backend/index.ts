@@ -42,14 +42,17 @@ app.post("/login", async (request, response) => {
         user.email === request.body.email &&
         user.password === request.body.password
     );
+    let validData = true
     //console.log(validateLogin[0])
     if (checkDb) {
-      console.log(validateLogin[0]);
+      console.log("Validate Login", validateLogin[0]);
       console.log("You're in");
       // const getName = await database.all("SELECT * FROM accounts;");
       response.send({ user: validateLogin[0] });
     } else {
+      validData = false
       response.status(401);
+      response.send({response:validData})
     }
   } else {
     response.status(400);
@@ -65,16 +68,18 @@ app.post("/accounts/create", async (request, response) => {
   console.log(request.body.surname);
   console.log(request.body.email);
   console.log(request.body.password);
+  console.log(request.body.secAnswer);
 
   if (
     request.body.name &&
     request.body.surname &&
     request.body.email &&
-    request.body.password
+    request.body.password &&
+    request.body.secAnswer
   ) {
 
 
-    if (request.body.password.length >= 6) {
+    if (request.body.password.length >= 6 && request.body.secAnswer.length >=1) {
 
         const getAllInfo = await database.all(
         `SELECT * FROM accounts;`
@@ -94,11 +99,13 @@ app.post("/accounts/create", async (request, response) => {
       }else{
 
         const createAccount = await database.all(
-        `INSERT INTO accounts (name, surname, email, password) VALUES(
+        `INSERT INTO accounts (name, surname, email, password, security_answer) VALUES(
         "${request.body.name}",
          "${request.body.surname}",
          "${request.body.email}",
-         "${request.body.password}");`
+         "${request.body.password}",
+         "${request.body.secAnswer}");
+         `
       );
 
       const getAccount = await database.all(
@@ -126,16 +133,98 @@ app.post("/accounts/create", async (request, response) => {
   }
 });
 
-app.put("/accounts/update", async (_request, response) => {
-  // const getName = await database.all("SELECT * FROM accounts;");
-  response.send(``);
+
+
+
+app.post("/accounts/validation", async (request, response) => {
+
+   const getName = await database.all("SELECT id FROM accounts WHERE security_answer=? AND email=?",[request.body.securityAnswer, request.body.formEmail]);
+console.log("Användar-id:", getName[0].id)
+
+if(getName){
+
+     const getToken = await database.all("SELECT token FROM tokens WHERE account_id=?",[getName[0].id]);
+     console.log(getToken[0].token)
+     response.send({response: getToken[0].token})
+   }else{
+    response.send({response:"Invalid output"})
+   }
+
+});
+app.post("/accounts/validation/token", async (request, response) => {
+
+   const getToken = await database.all("SELECT * FROM tokens");
+console.log("Användar-tokens:", getToken)
+
+if(getToken.find(userToken => userToken.token === request.body.userToken)){
+const validUser = getToken.find(userToken => userToken.token === request.body.userToken)
+console.log("The valid user" , validUser.name)
+      const getName = await database.all("SELECT name FROM accounts WHERE id=?",[getToken[0].account_id]);
+      console.log(getName[0].name)
+     response.send({response: getName[0].name})
+   }else{
+    response.send({response:"Invalid output"})
+   }
+
 });
 
-app.delete("/accounts/delete", async (_request, response) => {
-  // const getName = await database.all("SELECT * FROM accounts;");
-  response.send(`account deleted`);
+
+
+
+
+
+app.patch("/accounts/update", async (request, response) => {
+
+
+
+   const getId = await database.all(`SELECT account_id FROM tokens WHERE token=?`,[request.body.theUserToken]);
+
+console.log(getId)
+
+
+   const setPassword = await database.all(`UPDATE accounts SET password=? WHERE id=?`,[request.body.password, getId[0].account_id]);
+  // console.log("User Password "+ request.body.password)
+  // console.log("UserToken "+ request.body.theUserToken)
+  response.send({response:"Password Updated"});
 });
 
-app.listen(3000, () => {
-  console.log("Webbtjänsten kan nu ta emot anrop på http://localhost:3000/");
+
+app.post("/dreams", async (request, response) => {
+  console.log(request.body.activeUserId)
+  const setToken = await database.all(
+    `SELECT * FROM dreams WHERE account_id=?;`,[`${request.body.activeUserId}`]);
+
+
+    console.log(setToken)
+    // const getName = await database.all("SELECT * FROM accounts;");
+    response.send({dbEntries:setToken});
+  });
+  app.post("/dreams/create", async (request, response) => {
+
+    console.log(request.body.formData)
+    const setEntry = await database.all(
+      `INSERT INTO dreams (account_id, title, text, tag) VALUES (${request.body.activeUserId}, "${request.body.formData.dreamTitle}", "${request.body.formData.dreamContent}", "${request.body.formData.dreamTags}");`);
+
+      response.send({response:"New post created"});
+    });
+
+    app.delete("/dreams/delete", async (request, response) => {
+
+      // console.log(request.body.id_Of_Dream)
+      // console.log(request.body.activeUserId)
+
+      if(request.body.id_Of_Dream && request.body.activeUserId){
+
+        const deletePost = await database.all(`DELETE FROM dreams WHERE dream_id=? AND account_id=?;`,[request.body.id_Of_Dream, request.body.activeUserId]);
+
+response.send({answer:"Post deleted"})
+      }else{
+        response.status(418)
+        response.send({InvalidRequest:"I'm a teapot!"})
+      }
+
+    });
+
+    app.listen(3000, () => {
+      console.log("Webbtjänsten kan nu ta emot anrop på http://localhost:3000/");
 });

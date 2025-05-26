@@ -11,8 +11,12 @@ CREATE TABLE
     surname TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
+    security_answer TEXT NOT NULL,
     created_at TEXT DEFAULT CURRENT_DATE,
-    updated_at TEXT DEFAULT CURRENT_DATE CHECK (email LIKE '%_@__%.__%') CHECK (LENGTH (password) >= 6)
+    updated_at TEXT DEFAULT CURRENT_DATE,
+    CHECK (email LIKE '%_@__%.__%')
+    CHECK (LENGTH (password) >= 6)
+    CHECK (LENGTH (security_answer) >= 1)
   );
 
 CREATE TABLE
@@ -25,67 +29,84 @@ CREATE TABLE
 CREATE TABLE
   dreams (
     dream_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    account_id INTEGER,
+    account_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
     text TEXT NOT NULL,
+    tag TEXT,
     created_at TEXT DEFAULT CURRENT_DATE,
     FOREIGN KEY (account_id) REFERENCES accounts (id)
   );
 
 INSERT INTO
-  accounts (name, surname, email, password)
+  dreams (account_id, title, text, tag)
+VALUES
+  (
+    1,
+    'Min första post',
+    'Älskade verkligen att jobba på mitt projekt',
+    'surreal'
+  );
+
+INSERT INTO
+  accounts (name, surname, email, password, security_answer)
 VALUES
   (
     'Joakim',
     'Erlandsson',
-    'Joakim@SLB.se',
-    'mypassword'
+    'joakim@slb.se',
+    'mypassword',
+    'pilot'
   );
 
-  INSERT INTO tokens (account_id, token) VALUES (1, '1088b7ec-912c-48cc-b117-bf4e0e4a9a35');
-
+INSERT INTO
+  tokens (account_id, token)
+VALUES
+  (1, '1088b7ec-912c-48cc-b117-bf4e0e4a9a35');
 
 INSERT INTO
-  accounts (name, surname, email, password)
+  accounts (name, surname, email, password, security_answer)
 VALUES
   (
     'Mikael',
     'Persson',
-    'Mikael@SLB.se',
-    'tyrannen'
+    'mikael@slb.se',
+    'tyrannen',
+    'gamer'
   );
 
-  INSERT INTO tokens (account_id, token) VALUES (2, '6f17e697-fbd3-4067-92c7-ab2c17b29499');
+INSERT INTO
+  tokens (account_id, token)
+VALUES
+  (2, '6f17e697-fbd3-4067-92c7-ab2c17b29499');
 
 INSERT INTO
-  accounts (name, surname, email, password)
+  accounts (name, surname, email, password, security_answer)
 VALUES
   (
     'Eric',
     'Karlsson',
-    'Eric@SLB.se',
-    'kingafro'
+    'eric@slb.se',
+    'kingafro',
+    'dungeon master'
   );
 
-  INSERT INTO tokens (account_id, token) VALUES (3, 'a869be19-2439-4126-8117-fd9cf6ebce7c');
+INSERT INTO
+  tokens (account_id, token)
+VALUES
+  (3, 'a869be19-2439-4126-8117-fd9cf6ebce7c');
 
 INSERT INTO
-  accounts (name, surname, email, password)
+  accounts (name, surname, email, password, security_answer)
 VALUES
   (
     'Patrik',
     'Lundell',
-    'Patrik@SLB.se',
-    'mrmcevil'
+    'patrik@slb.se',
+    'mrmcevil',
+    'designer'
   );
 
-  INSERT INTO tokens (account_id, token) VALUES (4, 'fe60f688-dd1c-4d01-9093-87caea60176d');
-
 INSERT INTO
-  dreams (account_id, text)
+  tokens (account_id, token)
 VALUES
-  (1, 'Idag hade jag en riktigt härlig dag i solen!');
-
-INSERT INTO
-  dreams (account_id, text)
-VALUES
-  (1, 'Gött med pizza i Italien');
+  (4, 'fe60f688-dd1c-4d01-9093-87caea60176d');

@@ -13,42 +13,50 @@ padding-left:5px;
 
 function CreateAccount() {
 
-  const [accCreated, setAccCreated] = useState(false)
-  const [invalidInput, setInvalidInput] = useState(false)
-  const [formEmail, setFormEmail] = useState("")
-  const [formName, setFormName] = useState("")
-  const [formSurname, setFormSurname] = useState("")
-  const [formPassword, setFormPassword] = useState("")
-  const [accountMatch, setAccountMatch] = useState(true)
+const [accCreated, setAccCreated] = useState(false)
+const [invalidInput, setInvalidInput] = useState(false)
+const [formEmail, setFormEmail] = useState("")
+const [formName, setFormName] = useState("")
+const [formSurname, setFormSurname] = useState("")
+const [formPassword, setFormPassword] = useState("")
+const [formSec, setFormSec] = useState("")
+const [accountMatch, setAccountMatch] = useState(true)
 
-  function emailData(props: { target: { value: string } }) {
-    setAccCreated(false)
-    setInvalidInput(false)
-    setFormEmail(props.target.value)
-  }
-  function nameData(props: { target: { value: string } }) {
-    setAccCreated(false)
-    setInvalidInput(false)
-    setFormName(props.target.value)
-  }
-  function surnameData(props: { target: { value: string } }) {
-    setAccCreated(false)
-    setInvalidInput(false)
-    setFormSurname(props.target.value)
-  }
-  function passwordData(props: { target: { value: string } }) {
-    setAccCreated(false)
-    setInvalidInput(false)
-    setFormPassword(props.target.value)
-  }
 
+
+function emailData(props: { target: { value: string } }) {
+  const emailAnswer = props.target.value
+  setAccCreated(false)
+  setInvalidInput(false)
+  setFormEmail(emailAnswer)
+}
+function nameData(props: { target: { value: string } }) {
+  setAccCreated(false)
+  setInvalidInput(false)
+  setFormName(props.target.value)
+}
+function surnameData(props: { target: { value: string } }) {
+  setAccCreated(false)
+  setInvalidInput(false)
+  setFormSurname(props.target.value)
+}
+function passwordData(props: { target: { value: string } }) {
+  setAccCreated(false)
+  setInvalidInput(false)
+  setFormPassword(props.target.value)
+}
+function securityData(props: { target: { value: string } }) {
+  setAccCreated(false)
+  setInvalidInput(false)
+  setFormSec(props.target.value)
+}
 
 
 async function onCreate(event: { preventDefault: () => void; }){
   event.preventDefault();
 
 
-  if(formName && formSurname && formEmail.length >= 5  && formPassword.length >= 6){
+  if(formName && formSurname && formEmail.length >= 5  && formPassword.length >= 6 && formSec){
 
 (async () => {
   const rawResponse = await fetch('http://localhost:3000/accounts/create', {
@@ -57,7 +65,7 @@ async function onCreate(event: { preventDefault: () => void; }){
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({email: formEmail, password: formPassword, name:formName, surname:formSurname})
+    body: JSON.stringify({email: formEmail.toLowerCase(), password: formPassword, name:formName, surname:formSurname, secAnswer:formSec.toLocaleLowerCase()})
   });
   const content = await rawResponse.json();
 
@@ -70,12 +78,16 @@ async function onCreate(event: { preventDefault: () => void; }){
   setFormSurname("");
   setFormEmail("");
   setFormPassword("");
+  setFormSec("");
+
+
 
   }else if(content.isValid === false){
   setFormName("");
   setFormSurname("");
   setFormEmail("");
   setFormPassword("");
+  setFormSec("");
   setAccountMatch(content.isValid)
   }
 
@@ -111,6 +123,10 @@ async function onCreate(event: { preventDefault: () => void; }){
     <StyledInput onChange={surnameData} placeholder="Surname" type="text" value={formSurname} />
     <StyledInput onChange={emailData} placeholder="Email" type="email" value={formEmail} />
     <StyledInput onChange={passwordData} placeholder="New password.." type="text" value={formPassword} />
+    <p style={{margin:"0"}}>
+      What is your dream profession?
+    </p>
+    <StyledInput onChange={securityData} placeholder="Security question.." type="text" value={formSec} />
     <input onClick={onCreate} style={{backgroundColor:"#FFD447",height:"30px",width:"220px",borderRadius:"5px",fontWeight:"bold", cursor:"pointer"}} value={"Create"} type="submit"/>
 
     </div>

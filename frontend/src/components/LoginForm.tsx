@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react"; //useEffect
 import { useNavigate } from "react-router-dom";
+import ChangePassword from "./ChangePassword";
 
 const StyledInput = styled.input`
 height:40px;
@@ -26,22 +27,17 @@ function LoginForm() {
   const [invalidInput, setInvalidInput] = useState(false)
   const [formEmail, setFormEmail] = useState("")
   const [formPassword, setFormPassword] = useState("")
+  const [forgotPassword, setForgotPassword] = useState(false)
 
 
-  // Hämta info från accounts via response.send med matchande namn från backend, sedan log in och spara i localStorage?
-  // useEffect(
- /* useEffect(() => {
-    fetch("http://localhost:8080/login")
-      .then((response) => response.json())
-      .then((result) => setUserData(result));
-      console.log(userData)
-  }, [userData]); */
-  // )
+
 
   function emailData(props: { target: { value: string } }) {
+
     setInvalidInput(false)
     setFormEmail(props.target.value)
   }
+
   function passwordData(props: { target: { value: string } }) {
     setInvalidInput(false)
     setFormPassword(props.target.value)
@@ -68,13 +64,17 @@ const rawResponse = await fetch('http://localhost:3000/login', {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({email: formEmail, password: formPassword})
+    body: JSON.stringify({email: formEmail.toLowerCase(), password: formPassword})
   });
 
 const responseData = await rawResponse.json();
+console.log("Response data ", responseData)
+
 if(responseData.user.password === formPassword){
 
 setUserData(responseData.user)
+console.log(userData)
+console.log(validInput)
 //console.log(responseData.user);
 setValidInput(true)
 localStorage.setItem("currentUser", JSON.stringify(responseData.user))
@@ -105,17 +105,17 @@ logIn()
 
 }
 
-
   return <>
 
   <form name="loginForm" onSubmit={onPost}>
     <div style={{display:"flex", flexDirection:"column",gap:"15px", justifyContent:"center", alignItems:"center"}}>
 
-    <StyledInput autoComplete="email" onChange={emailData} name="email"  placeholder="email.." type="email" value={formEmail} />
+    <StyledInput type="email" autoComplete="email" onChange={emailData} name="email"  placeholder="email.."  value={formEmail} />
     <StyledInput autoComplete="current-password" onChange={passwordData} name="password"  placeholder="password.." type="password" value={formPassword} />
     <input style={{backgroundColor:"#FFD447",height:"30px",width:"220px",borderRadius:"5px",fontWeight:"bold", cursor:"pointer"}} value={"Login"} type="submit"/>
     </div>
   </form>
+
   {
 invalidInput ?
 <div>

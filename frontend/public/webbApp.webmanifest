@@ -1,0 +1,18 @@
+{
+  "background_color": "grey",
+  "display": "standalone",
+    "icons": [
+
+      {
+        "purpose": "maskable",
+        "sizes": "192x192",
+        "src": "dreamcatcher.png",
+        "type": "image/png"
+      }
+
+    ],
+  "name": "DreamLore",
+  "short_name": "DreamL",
+  "start_url": ".",
+  "theme_color": "#db884d"
+}

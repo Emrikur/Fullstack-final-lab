@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="icon" type="icon" href="/dreamcatcher.png" />
-    <meta name="author" content="Joakim Erlandsson" />
-    <meta name="keywords" content="Dreams, notes, sleep" />
-    <meta name="description" content="Write down your dreams" />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fullstack Final Project</title>
+    <link href="/webbApp.webmanifest" rel="manifest">
+    <meta name="author" content="Joakim Erlandsson">
+    <meta name="keywords" content="Dreams, notes, sleep">
+    <meta name="description" content="Write down your dreams">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Lore</title>
+    <link rel="icon" type="image/png" sizes="196x196" href="/favicon-196.png">
+    <link rel="apple-touch-icon" href="public/apple-icon-180.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx">
+    </script>
+    <script>
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/sw.js')
+        console.log("Serviceworkern fungerar")
+      }
+    </script>
   </body>
 </html>

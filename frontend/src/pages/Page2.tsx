@@ -8,7 +8,7 @@ interface Page2Props {
 function Page2({ msg }: Page2Props) {
   const getUser = localStorage.getItem("currentUser");
   console.log(typeof getUser)
-  const transcribeUserData = JSON.parse(getUser);
+  const transcribeUserData = JSON.parse(getUser ?? '{}');
   console.log("From localStorage ", transcribeUserData.name);
   return (
     <>

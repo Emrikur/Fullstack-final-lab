@@ -1,8 +1,8 @@
 // import styled from "styled-components";
 import { Link } from "react-router-dom";
+import News from "../components/News"
 import Arrow from "../assets/right-arrow.png"
-import Logout from "../components/Logout";
-import Dreams from "./Dreams";
+import Logout from "../components/Navbar";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import { useState } from "react";
 const H3 = styled.h3`
 text-decoration:underline;
 color:#FFD447;
+margin-left:25px;
 `;
 
 const Welcomer = styled.div`
@@ -23,14 +24,15 @@ const Welcomer = styled.div`
 function Home() {
 
 
-  const getUser = localStorage.getItem("currentUser");
-  const loggedInUser = JSON.parse(getUser);
 
-
-
+  const [arrowRotate, setArrowRotate] = useState(false)
   const [arrowRotate1, setArrowRotate1] = useState(false)
   const [arrowRotate2, setArrowRotate2] = useState(false)
 
+  const handleClick = () => {
+
+  setArrowRotate( (previous:boolean) => !previous);
+}
   const handleClickA = () => {
 
   setArrowRotate1( (previous:boolean) => !previous);
@@ -51,6 +53,7 @@ const handleClickB = () => {
 
   return (
     <>
+    <Logout/>
       <motion.main
         style={{
           display: "flex",
@@ -67,11 +70,55 @@ const handleClickB = () => {
       >
         <div style={{marginBottom:"auto"}}>
           <h1>Welcome to Dream Lore</h1>
-          <h2>
-            {loggedInUser.name} {loggedInUser.surname}
-          </h2>
         </div>
         <Welcomer>
+
+{arrowRotate ?
+<div
+            style={{
+              width: "70vw",
+              minHeight: "14vh",
+              backgroundColor: " rgb(151, 135, 171,0.7)",
+              borderRadius: "3px",
+            }}
+            title="news"
+          >
+
+            <div style={{display:"flex", alignItems:"center", borderBottom: "solid black 2px", justifyContent:"space-around" }}>
+              <H3>
+                News
+              </H3>
+              <img onClick={handleClick} style={{transition:"transform .3s",transform:`rotate(${arrowRotate ? 90 : 0}deg)`,width:"auto",height:"18px",marginLeft:"auto", marginRight:"25px"}} src={Arrow} alt="Arrow" />
+            </div>
+
+            <div>
+              <h4>Update: (0.5)</h4>
+            <News/>
+
+            </div>
+          </div>
+:
+<div
+            style={{
+              width: "70vw",
+              height: "auto",
+              backgroundColor: " rgb(151, 135, 171,0.7)",
+              borderRadius: "3px",
+            }}
+            title="dreams"
+          >
+
+            <div style={{display:"flex", alignItems:"center", borderBottom: "solid black 2px", justifyContent:"space-around" }}>
+              <H3>
+                News
+              </H3>
+              <img onClick={handleClick} style={{transition:"transform .3s",transform:`rotate(${arrowRotate1 ? 90 : 0}deg)`,width:"auto",height:"18px",marginLeft:"auto", marginRight:"25px"}} src={Arrow} alt="Arrow" />
+            </div>
+
+          </div>}
+
+
+
           {arrowRotate1 ?
 
             <div
@@ -86,7 +133,7 @@ const handleClickB = () => {
 
             <div style={{display:"flex", alignItems:"center", borderBottom: "solid black 2px", justifyContent:"space-around" }}>
               <H3>
-                <Link style={{color:"#FFD447",marginLeft:"25px"}} to="/Dreams">Dream Journal</Link>
+                <Link style={{color:"#FFD447"}} to="/Dreams">Dream Journal</Link>
               </H3>
               <img onClick={handleClickA} style={{transition:"transform .3s",transform:`rotate(${arrowRotate1 ? 90 : 0}deg)`,width:"auto",height:"18px",marginLeft:"auto", marginRight:"25px"}} src={Arrow} alt="Arrow" />
             </div>
@@ -111,7 +158,7 @@ const handleClickB = () => {
 
             <div style={{display:"flex", alignItems:"center", borderBottom: "solid black 2px", justifyContent:"space-around" }}>
               <H3>
-                <Link style={{color:"#FFD447",marginLeft:"25px"}} to="/Dreams">Dream Journal</Link>
+                <Link style={{color:"#FFD447"}} to="/Dreams">Dream Journal</Link>
               </H3>
               <img onClick={handleClickA} style={{transition:"transform .3s",transform:`rotate(${arrowRotate1 ? 90 : 0}deg)`,width:"auto",height:"18px",marginLeft:"auto", marginRight:"25px"}} src={Arrow} alt="Arrow" />
             </div>
@@ -129,7 +176,7 @@ const handleClickB = () => {
 
             <div style={{display:"flex", alignItems:"center", borderBottom: "solid black 2px", justifyContent:"space-around" }}>
             <H3>
-              <Link style={{color:"#FFD447",marginLeft:"25px"}} to="/page2">Diary</Link>
+              <Link style={{color:"#FFD447"}} to="/page2">Diary</Link>
             </H3>
             <img onClick={handleClickB} style={{transition:"transform .3s",transform:`rotate(${arrowRotate2 ? 90 : 0}deg)`,width:"auto",height:"18px",marginLeft:"auto", marginRight:"25px"}} src={Arrow} alt="Arrow" />
 
@@ -150,7 +197,7 @@ const handleClickB = () => {
 
             <div style={{display:"flex", alignItems:"center", borderBottom: "solid black 2px", justifyContent:"space-around" }}>
             <H3>
-              <Link style={{color:"#FFD447", marginLeft:"25px"}} to="/page2">Diary</Link>
+              <Link style={{color:"#FFD447"}} to="/page2">Diary</Link>
             </H3>
             <img onClick={handleClickB} style={{transition:"transform .3s",transform:`rotate(${arrowRotate2 ? 90 : 0}deg)`,width:"auto",height:"18px",marginLeft:"auto", marginRight:"25px"}} src={Arrow} alt="Arrow" />
 
@@ -159,9 +206,6 @@ const handleClickB = () => {
           }
         </Welcomer>
 
-        <div style={{marginBottom:"30px"}}>
-          <Logout />
-        </div>
       </motion.main>
     </>
   );

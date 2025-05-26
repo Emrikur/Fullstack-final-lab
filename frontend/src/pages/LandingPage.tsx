@@ -1,11 +1,16 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+
 import LoginForm from "../components/LoginForm";
 import CreateAccount from "../components/CreateAccount";
+
 import { useState } from "react";
+import ChangePassword from "../components/ChangePassword";
 const Main = styled.main`
 
   width: 70vw;
+  margin-left:auto;
+  margin-right:auto;
+
 
   h1 {
     font-size: 55px;
@@ -14,10 +19,13 @@ const Main = styled.main`
     }
   }
 `;
+
+
+
 function LandingPage() {
-  const [haveAccount, setAccount] = useState(true);
+  const [haveAccount, setAccount] = useState("Login");
   function toCreateAcc() {
-    setAccount(false);
+    setAccount("Create");
   }
 
 
@@ -32,9 +40,9 @@ function LandingPage() {
           </span>
         </h1>
 
-        <Link to="/home">Home</Link>
+
         <div>
-          {haveAccount ? (
+          {haveAccount === "Login" ? (
             <div>
               <h2>Log in to continue</h2>
               <LoginForm />
@@ -56,14 +64,14 @@ function LandingPage() {
                 </a>{" "}
                 |
                 <a
-                  onClick={() => alert("Feature to be added")}
+                  onClick={() => setAccount("Forgot")}
                   style={{ color: "#7A5CA0", cursor: "pointer" }}
                 >
                   Forgot password?
                 </a>
               </div>
             </div>
-          ) : (
+          ) : haveAccount === "Create" ?(
             <div
               style={{
                 display: "flex",
@@ -75,13 +83,35 @@ function LandingPage() {
               <CreateAccount />
               <a
                 style={{ cursor: "pointer", fontFamily: "pageFontBold" }}
-                onClick={() => setAccount(true)}
+                onClick={() => setAccount("Login")}
               >
                 Back
               </a>
             </div>
-          )}
+
+          ) : haveAccount === "Forgot" ?(
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <ChangePassword />
+              <a
+                style={{ cursor: "pointer", fontFamily: "pageFontBold" }}
+                onClick={() => setAccount("Login")}
+              >
+                Back
+              </a>
+            </div>
+          )
+        : ""}
         </div>
+
+
+        <p style={{marginTop:"20vh"}}>All Rights Reserved by the DreamLore Company©</p>
       </Main>
     </>
   );
