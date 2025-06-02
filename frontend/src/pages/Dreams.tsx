@@ -5,11 +5,11 @@ import Logout from "../components/Navbar";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js/auto";
 Chart.register(ArcElement, Tooltip, Legend);
 import { Doughnut } from "react-chartjs-2";
+import { ToastContainer, toast } from "react-toastify";
 
 interface JourneyDbProps {
   title: string;
   dream_id: number;
-
   text: string;
   tag: string;
   created_at: string;
@@ -17,10 +17,8 @@ interface JourneyDbProps {
 
 const CreatePost = styled.div`
   display: grid;
-  background-color: rgb(151, 135, 171, 0.7);
   padding: 10px;
-  gap:15px;
-  border: black solid 1.5px;
+  gap: 15px;
   border-radius: 7px;
   margin-bottom: 20px;
 `;
@@ -28,10 +26,11 @@ const CreatePost = styled.div`
 const Radios = styled.div`
   display: grid;
   width: 70%;
+  border: black solid 1.5px;
+  border-radius: 5px;
   grid-template-rows: repeat(2, 1fr);
   grid-template-columns: repeat(2, 1fr);
-  margin-left: auto;
-  margin-right: auto;
+  margin: 15px auto;
   padding: 10px;
 `;
 
@@ -40,42 +39,38 @@ const Journal = styled.div`
   border-radius: 7px;
   display: flex;
   flex-direction: column;
-  background-color: rgb(151, 135, 171, 0.7);
 
-  #journal-entry-title{
-
- margin-left:15px;
- width:fit-content;
+  #journal-entry-title {
+    margin-left: 15px;
+    width: fit-content;
   }
-  #journal-entry-textarea{
- overflow-wrap:break-word;
- height:auto;
+  #journal-entry-textarea {
+    overflow-wrap: break-word;
+    height: auto;
   }
 `;
 
 const Graph = styled.div`
-  background-color: rgb(151, 135, 171, 0.7);
+  background-color: #3f2964;
   border: black solid 1.5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 `;
 
 const Textarea = styled.div`
- height: 120px;
- padding: 15px;
- margin-bottom:15px;
+  resize: vertical;
+  padding: 15px;
 
- #dream-post{
+  #dream-post {
+    border: solid black 1.5px;
+    width: 90%;
+    max-width: 70%;
+    min-width: 200px;
 
-                  border: solid black 1.5px;
-                  width: 90%;
-                  max-width:70%;
-                  min-width:200px;
-
-                  resize:vertical;
-                  padding: 7px;
-                  border-style: none;
-
-
- }
+    resize: vertical;
+    padding: 7px;
+    border-style: none;
+  }
 `;
 
 function Dreams() {
@@ -87,8 +82,10 @@ function Dreams() {
   }
 
   const getUser = localStorage.getItem("currentUser");
-
   const transcribeUserData = JSON.parse(getUser ?? "{}");
+
+  const dreamPost = () => toast("Dream posted to journal");
+  const postDeleted = () => toast("Journal entry deleted");
 
   const [journalDb, setJournalDb] = useState([]);
   const [graphActive, setGraphActive] = useState(false);
@@ -96,6 +93,9 @@ function Dreams() {
   const [invalidInput, setinvalidInput] = useState(false);
   const [invalidTextInput, setinvalidTextInput] = useState(false);
   const [postCreated, setPostCreated] = useState(false);
+  const [titleField, setTitleField] = useState("");
+  const [textArea, setTextArea] = useState("");
+  const [radioTag, setRadioTag] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -110,43 +110,20 @@ function Dreams() {
         });
 
         const responseData = await dreamResponse.json();
-        console.log(responseData.dbEntries);
+        //console.log(responseData.dbEntries);
         setJournalDb(responseData.dbEntries);
-        console.log("db entries", journalDb);
+        //console.log("db entries", journalDb);
       } catch (error) {
         console.error("data is not valid", error);
       }
     })();
   }, [updatePost]);
 
-  const [titleField, setTitleField] = useState("");
-  const [textArea, setTextArea] = useState("");
-
-  const [radioTag, setRadioTag] = useState("");
-
-
-
-
-
-
-function toggleCreated(){
-setTimeout(() => {
-  setPostCreated(false)
-
-},4000);
-
-
-
-
-}
-
-
-
-
-
-
-
-
+  function toggleCreated() {
+    setTimeout(() => {
+      setPostCreated(false);
+    }, 4000);
+  }
 
   function onCreatePost(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -156,14 +133,13 @@ setTimeout(() => {
     const data = Object.fromEntries(theFormData.entries());
 
     if (titleField.length >= 1) {
-setinvalidInput(false)
-      if(textArea.length >= 1){
-
-
+      setinvalidInput(false);
+      if (textArea.length >= 1) {
         (async () => {
           try {
             const dreamResponse = await fetch(
               "http://localhost:3000/dreams/create",
+
               {
                 method: "POST",
                 headers: {
@@ -182,20 +158,21 @@ setinvalidInput(false)
             setTitleField("");
             setTextArea("");
             setRadioTag("");
-            setinvalidTextInput(false)
-            setPostCreated(true)
-            toggleCreated()
+            setinvalidTextInput(false);
+            setPostCreated(true);
+            dreamPost();
+            toggleCreated();
 
             console.log(responseData);
           } catch (error) {
             console.error("data is not valid", error);
           }
         })();
-      }else{
-        setinvalidTextInput(true)
+      } else {
+        setinvalidTextInput(true);
       }
     } else {
-      setinvalidInput(true)
+      setinvalidInput(true);
       console.log("text cannot be empty");
     }
   }
@@ -226,7 +203,6 @@ setinvalidInput(false)
   const undefinedTag = allUndefined.length;
 
   function deletePost(e: number) {
-    // alert("deleted post");
 
     (async () => {
       try {
@@ -252,6 +228,7 @@ setinvalidInput(false)
 
         setUpdatePost((prev) => !prev);
         console.log(responseData);
+        postDeleted();
       } catch (error) {
         console.error("data is not valid", error);
       }
@@ -267,28 +244,36 @@ setinvalidInput(false)
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          justifyContent: "center",
+          margin: "0px",
         }}
       >
+        <Logout />
         <Link to={`/dashboard/${transcribeUserData.name}`}>
           Back to dashboard
         </Link>
-        <Logout />
       </div>
       <main>
-        <div>
-          <h1>Dream Journal</h1>
+        <div style={{ marginTop: "20px" }}>
+          <h1 style={{ color: "#f2771f" }}>Dream Journal</h1>
         </div>
         <CreatePost>
           <form onSubmit={onCreatePost}>
-            {invalidInput ? <p style={{color:"red",margin:"0"}}>missing title</p>:""}
+            {invalidInput ? (
+              <p style={{ color: "red", margin: "0" }}>missing title</p>
+            ) : (
+              ""
+            )}
             <input
               style={{
-                padding: "7px",
-                borderRadius: "2px",
-                borderStyle: "none",
-                border: "solid black 1.5px",
+                height: "40px",
+                width: "260px",
+                fontSize: "16px",
+                borderRadius: "5px",
+                fontFamily: "pageFont",
+                paddingLeft: "5px",
               }}
               name="dreamTitle"
               onChange={(e) => setTitleField(e.target.value)}
@@ -345,11 +330,12 @@ setinvalidInput(false)
             </Radios>
 
             <Textarea>
-              {
-                invalidTextInput ? <p style={{margin:"0",color:"red"}}>missing text</p>: ""
-              }
+              {invalidTextInput ? (
+                <p style={{ margin: "0", color: "red" }}>missing text</p>
+              ) : (
+                ""
+              )}
               <textarea
-
                 onChange={(e) => setTextArea(e.target.value)}
                 name="dreamContent"
                 id="dream-post"
@@ -359,7 +345,6 @@ setinvalidInput(false)
             </Textarea>
             <input
               style={{
-                marginTop:"auto",
                 backgroundColor: "#FFD447",
                 height: "30px",
                 width: "30%",
@@ -371,72 +356,28 @@ setinvalidInput(false)
               value="Create post"
             />
           </form>
-          { postCreated ?
-          //Vill att texten fadar in och ut
-          <p style={{margin:"0",fontSize:"14px",transition:" 2s ease-in-out"}}>posted</p>:""}
-        </CreatePost>
-        <Journal>
-          <p>Journal entries</p>
-
-          {journalDb ? (
-            journalDb.reverse().map((allEntries: JourneyDbProps) => (
-              <div
-                style={{
-                  backgroundColor: "#3f2964",
-
-                  height: "auto",
-                  marginBottom: "15px",
-                }}
-                key={allEntries.dream_id}
-              >
-                <p id="journal-entry-title">{allEntries.title}</p>
-                <div>
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      padding: " 20px",
-                      textAlign: "left"
-
-                    }}
-                  >
-                    <p id="journal-entry-textarea">{allEntries.text}</p>
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: "#3f2964",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "5px 15px",
-                    }}
-                  >
-                    <p>Tag: {allEntries.tag}</p>
-                    <p>{allEntries.created_at}</p>
-                    <p
-                      onClick={() => deletePost(allEntries.dream_id)}
-                      style={{
-                        cursor: "pointer",
-                        textDecoration: "underline",
-                        fontSize: "10px",
-                      }}
-                    >
-                      delete
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))
+          {postCreated ? (
+            //Vill att texten fadar in och ut
+            <p
+              style={{
+                margin: "0",
+                fontSize: "14px",
+                transition: " 2s ease-in-out",
+              }}
+            >
+              posted
+            </p>
           ) : (
-            <p>There are no entries yet..</p>
+            ""
           )}
-        </Journal>
+        </CreatePost>
         <Graph>
           {!graphActive ? (
             <div>
               <p
                 style={{
                   textDecoration: "underline",
-                  padding: "15px",
+                  padding: "5px",
                   cursor: "pointer",
                   width: "fit-content",
                   marginLeft: "auto",
@@ -468,7 +409,7 @@ setinvalidInput(false)
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: "white",
+                  backgroundColor: "#7c6b96",
                   marginLeft: "auto",
                   marginRight: "auto",
                   padding: "20px",
@@ -506,6 +447,7 @@ setinvalidInput(false)
                           "#8C5C3B",
                           "lightgrey",
                         ],
+
                         borderRadius: 5,
                         borderColor: "lightgrey",
                       },
@@ -516,10 +458,82 @@ setinvalidInput(false)
             </div>
           )}
         </Graph>
+        <ToastContainer theme="dark" />
+        <Journal>
+          <p
+            style={{
+              backgroundImage:
+                "linear-gradient(0deg, #13042c 17%, #3f2964 90%)",
+              margin: "0",
+              padding: "5px",
+            }}
+          >
+            Journal entries
+          </p>
+
+          {journalDb ? (
+            journalDb.reverse().map((allEntries: JourneyDbProps) => (
+              <div
+                style={{
+                  backgroundColor: "#3f2964",
+
+                  height: "auto",
+                  marginBottom: "15px",
+                }}
+                key={allEntries.dream_id}
+              >
+                <p id="journal-entry-title">{allEntries.title}</p>
+                <div>
+                  <div
+                    style={{
+                      backgroundColor: "rgb(151, 135, 171, 0.7)",
+                      padding: " 20px",
+                      textAlign: "left",
+                    }}
+                  >
+                    <p id="journal-entry-textarea">{allEntries.text}</p>
+                  </div>
+                  <div
+                    style={{
+                      backgroundColor: "#3f2964",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "5px 15px",
+                    }}
+                  >
+                    <p>Tag: {allEntries.tag}</p>
+                    <p>{allEntries.created_at}</p>
+                    <p
+                      onClick={() => deletePost(allEntries.dream_id)}
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        fontSize: "10px",
+                      }}
+                    >
+                      delete
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>There are no entries yet..</p>
+          )}
+        </Journal>
       </main>
-      <Link to={`/dashboard/${transcribeUserData.name}`}>
-        Back to dashboard
-      </Link>
+      <div style={{ marginTop: "15px" }}>
+        <Link to={`/dashboard/${transcribeUserData.name}`}>
+          Back to dashboard
+        </Link>
+      </div>
+      <footer>
+        <p style={{ marginTop: "20vh" }}>
+          All Rights Reserved by <br />
+          the DreamLore Company©
+        </p>
+      </footer>
     </>
   );
 }

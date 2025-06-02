@@ -11,6 +11,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --toastify-color-dark: radial-gradient(circle, #13042c 17%, #3f2964 90%);;
+  --toastify-font-family: pageFontBold;
 }
 
 a {
@@ -37,13 +40,15 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
+  border-radius: 5px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
+  height: fit-content;
+  width: 30%;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #FFD447;
   cursor: pointer;
   transition: border-color 0.25s;
 }

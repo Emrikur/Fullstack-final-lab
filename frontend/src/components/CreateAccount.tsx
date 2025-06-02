@@ -10,6 +10,15 @@ font-family:pageFont;
 padding-left:5px;
 `
 
+const SelectZodiac = styled.select`
+height:40px;
+width:260px;
+font-size:16px;
+border-radius:5px;
+font-family:pageFont;
+padding-left:5px;
+`
+
 
 function CreateAccount() {
 
@@ -20,6 +29,7 @@ const [formName, setFormName] = useState("")
 const [formSurname, setFormSurname] = useState("")
 const [formPassword, setFormPassword] = useState("")
 const [formSec, setFormSec] = useState("")
+const [formZodiac, setformZodiac] = useState("")
 const [accountMatch, setAccountMatch] = useState(true)
 
 
@@ -51,12 +61,16 @@ function securityData(props: { target: { value: string } }) {
   setFormSec(props.target.value)
 }
 
+function ZodiacData(e:{target:{value:string}}){
+  setformZodiac(e.target.value)
+}
+
 
 async function onCreate(event: { preventDefault: () => void; }){
   event.preventDefault();
 
 
-  if(formName && formSurname && formEmail.length >= 5  && formPassword.length >= 6 && formSec){
+  if(formName && formSurname && formEmail.length >= 5  && formPassword.length >= 6 && formSec && formZodiac){
 
 (async () => {
   const rawResponse = await fetch('http://localhost:3000/accounts/create', {
@@ -65,7 +79,7 @@ async function onCreate(event: { preventDefault: () => void; }){
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({email: formEmail.toLowerCase(), password: formPassword, name:formName, surname:formSurname, secAnswer:formSec.toLocaleLowerCase()})
+    body: JSON.stringify({email: formEmail.toLowerCase(), password: formPassword, name:formName, surname:formSurname, secAnswer:formSec.toLocaleLowerCase(), zodiac: formZodiac})
   });
   const content = await rawResponse.json();
 
@@ -127,6 +141,22 @@ async function onCreate(event: { preventDefault: () => void; }){
       What is your dream profession?
     </p>
     <StyledInput onChange={securityData} placeholder="Security question.." type="text" value={formSec} />
+    <SelectZodiac onChange={ZodiacData} value={formZodiac}>
+<option value="Aries">Aries</option>
+<option value="Taurus">Taurus</option>
+<option value="Gemini">Gemini</option>
+<option value="Cancer">Cancer</option>
+<option value="Leo">Leo</option>
+<option value="Virgo">Virgo</option>
+<option value="Libra">Libra</option>
+<option value="Scorpio">Scorpio</option>
+<option value="Sagittarius">Sagittarius</option>
+<option value="Capricorn">Capricorn</option>
+<option value="Aquarius">Aquarius</option>
+<option value="Pisces">Pisces</option>
+    </SelectZodiac>
+
+
     <input onClick={onCreate} style={{backgroundColor:"#FFD447",height:"30px",width:"220px",borderRadius:"5px",fontWeight:"bold", cursor:"pointer"}} value={"Create"} type="submit"/>
 
     </div>

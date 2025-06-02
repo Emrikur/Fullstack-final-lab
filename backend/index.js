@@ -57,15 +57,14 @@ let database;
         filename: "database.sqlite",
     });
     yield database.run("PRAGMA foreign_keys = ON");
-    //console.log("Redo att göra databasanrop");
 }))();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
-app.get("/dashboard/:dashboard", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(request.params.dashboard);
+app.get("/dashboard/:user", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(request.params.user);
     // const getName = await database.all("SELECT * FROM accounts;");
     // response.send(`${getName[0].name}`);
-    response.send(request.params.dashboard);
+    response.send(request.params.user);
 }));
 app.use(express_1.default.json());
 app.post("/login", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
@@ -80,6 +79,7 @@ app.post("/login", (request, response) => __awaiter(void 0, void 0, void 0, func
             console.log("Validate Login", validateLogin[0]);
             console.log("You're in");
             // const getName = await database.all("SELECT * FROM accounts;");
+            //console.log("User LOGIN info", validateLogin[0])
             response.send({ user: validateLogin[0] });
         }
         else {
@@ -93,6 +93,76 @@ app.post("/login", (request, response) => __awaiter(void 0, void 0, void 0, func
         response.send("missing input");
     }
 }));
+app.get("/accounts/admin", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const getAdminBroadcast = yield database.all(`SELECT * FROM broadcasts;`);
+    console.log(getAdminBroadcast);
+    response.send(getAdminBroadcast);
+}));
+app.post("/horoscope/day", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const URL = request.body.horoscope;
+    fetch(`${URL}`)
+        .then((response) => response.json())
+        .then((result) => {
+        const horoscopeData = result.data;
+        //console.log(horoscopeData);
+        //console.log(adminBroadcast)
+        response.send({ response: horoscopeData });
+    });
+    //console.log(request.body.horoscope);
+    //console.log(horoscopeData)
+}));
+app.post("/horoscope/week", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const URL = request.body.horoscope;
+    fetch(`${URL}`)
+        .then((response) => response.json())
+        .then((result) => {
+        const horoscopeData = result.data;
+        //console.log(horoscopeData);
+        //console.log(adminBroadcast)
+        response.send({ response: horoscopeData });
+    });
+}));
+app.post("/horoscope/month", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const URL = request.body.horoscope;
+    fetch(`${URL}`)
+        .then((response) => response.json())
+        .then((result) => {
+        const horoscopeData = result.data;
+        //console.log(horoscopeData);
+        //console.log(adminBroadcast)
+        response.send({ response: horoscopeData });
+    });
+}));
+app.put("/accounts/admin", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(request.body.user_id);
+    console.log(request.body.feature);
+    console.log(request.body.optimization);
+    console.log(request.body.upcoming);
+    if (request.body.user_id &&
+        request.body.feature.length >= 6 &&
+        request.body.optimization.length >= 6 &&
+        request.body.upcoming.length >= 6) {
+        const verifyAccount = yield database.all(`SELECT id FROM accounts WHERE id=?`, [request.body.user_id]);
+        if (verifyAccount) {
+            const getAdminBroadcast = yield database.all(`UPDATE broadcasts SET admin_id=?, feature=?, optimization=?, upcoming=?`, [
+                request.body.user_id,
+                request.body.feature,
+                request.body.optimization,
+                request.body.upcoming,
+            ]);
+            response.status(200);
+            response.send("Resource updated successfully");
+        }
+        else {
+            response.status(401);
+            response.send("User unauthorized");
+        }
+    }
+    else {
+        response.status(400);
+        response.send("missing an input field");
+    }
+}));
 app.post("/accounts/create", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     let match = true;
     console.log(request.body.name);
@@ -100,26 +170,30 @@ app.post("/accounts/create", (request, response) => __awaiter(void 0, void 0, vo
     console.log(request.body.email);
     console.log(request.body.password);
     console.log(request.body.secAnswer);
+    console.log(request.body.zodiac);
     if (request.body.name &&
         request.body.surname &&
         request.body.email &&
         request.body.password &&
-        request.body.secAnswer) {
-        if (request.body.password.length >= 6 && request.body.secAnswer.length >= 1) {
+        request.body.secAnswer &&
+        request.body.zodiac) {
+        if (request.body.password.length >= 6 &&
+            request.body.secAnswer.length >= 1) {
             const getAllInfo = yield database.all(`SELECT * FROM accounts;`);
             // console.log(getAccount[0].id)
-            if (getAllInfo.find(matchingAccount => matchingAccount.email === request.body.email)) {
+            if (getAllInfo.find((matchingAccount) => matchingAccount.email === request.body.email)) {
                 match = false;
                 response.status(400);
                 response.send({ isValid: match });
             }
             else {
-                const createAccount = yield database.all(`INSERT INTO accounts (name, surname, email, password, security_answer) VALUES(
+                const createAccount = yield database.all(`INSERT INTO accounts (name, surname, email, password, security_answer, zodiac) VALUES(
         "${request.body.name}",
          "${request.body.surname}",
          "${request.body.email}",
          "${request.body.password}",
-         "${request.body.secAnswer}");
+         "${request.body.secAnswer}",
+         "${request.body.zodiac}");
          `);
                 const getAccount = yield database.all(`SELECT id FROM accounts WHERE email=?;`, [`${request.body.email}`]);
                 //console.log(getAccount[0].id);
@@ -154,10 +228,12 @@ app.post("/accounts/validation", (request, response) => __awaiter(void 0, void 0
 app.post("/accounts/validation/token", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const getToken = yield database.all("SELECT * FROM tokens");
     console.log("Användar-tokens:", getToken);
-    if (getToken.find(userToken => userToken.token === request.body.userToken)) {
-        const validUser = getToken.find(userToken => userToken.token === request.body.userToken);
+    if (getToken.find((userToken) => userToken.token === request.body.userToken)) {
+        const validUser = getToken.find((userToken) => userToken.token === request.body.userToken);
         console.log("The valid user", validUser.name);
-        const getName = yield database.all("SELECT name FROM accounts WHERE id=?", [getToken[0].account_id]);
+        const getName = yield database.all("SELECT name FROM accounts WHERE id=?", [
+            getToken[0].account_id,
+        ]);
         console.log(getName[0].name);
         response.send({ response: getName[0].name });
     }

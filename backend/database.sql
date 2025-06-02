@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS accounts;
 DROP TABLE IF EXISTS tokens;
 
 DROP TABLE IF EXISTS dreams;
+DROP TABLE IF EXISTS broadcasts;
 
 CREATE TABLE
   accounts (
@@ -12,6 +13,8 @@ CREATE TABLE
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     security_answer TEXT NOT NULL,
+    zodiac TEXT NOT NULL,
+    is_admin BOOLEAN DEFAULT 0,
     created_at TEXT DEFAULT CURRENT_DATE,
     updated_at TEXT DEFAULT CURRENT_DATE,
     CHECK (email LIKE '%_@__%.__%')
@@ -24,6 +27,14 @@ CREATE TABLE
     account_id INTEGER,
     token TEXT NOT NULL,
     FOREIGN KEY (account_id) REFERENCES accounts (id)
+  );
+CREATE TABLE
+  broadcasts (
+    admin_id INTEGER,
+    feature TEXT NOT NULL,
+    optimization TEXT NOT NULL,
+    upcoming TEXT NOT NULL,
+    FOREIGN KEY (admin_id) REFERENCES accounts (id)
   );
 
 CREATE TABLE
@@ -46,67 +57,46 @@ VALUES
     'Älskade verkligen att jobba på mitt projekt',
     'surreal'
   );
+INSERT INTO
+  broadcasts (admin_id, feature, optimization, upcoming)
+VALUES
+  (
+    1,
+    'Introducing the news tab! Here we will give you the latest news about the app and what is to come!',
+    'Optimized the way news are displayed',
+    'Next up we will be working on a horoscope-feature page'
+  );
 
 INSERT INTO
-  accounts (name, surname, email, password, security_answer)
+  accounts (name, surname, email, password, security_answer, zodiac, is_admin)
 VALUES
   (
     'Joakim',
     'Erlandsson',
     'joakim@slb.se',
     'mypassword',
-    'pilot'
+    'pilot',
+    'Aries',
+    1
+  );
+INSERT INTO
+  accounts (name, surname, email, password, security_answer, zodiac, is_admin)
+VALUES
+  (
+    'Vanja',
+    'Ferhatovic',
+    'vanja@slb.se',
+    '123456',
+    'security',
+    'Taurus',
+    1
   );
 
 INSERT INTO
   tokens (account_id, token)
 VALUES
   (1, '1088b7ec-912c-48cc-b117-bf4e0e4a9a35');
-
-INSERT INTO
-  accounts (name, surname, email, password, security_answer)
-VALUES
-  (
-    'Mikael',
-    'Persson',
-    'mikael@slb.se',
-    'tyrannen',
-    'gamer'
-  );
-
 INSERT INTO
   tokens (account_id, token)
 VALUES
-  (2, '6f17e697-fbd3-4067-92c7-ab2c17b29499');
-
-INSERT INTO
-  accounts (name, surname, email, password, security_answer)
-VALUES
-  (
-    'Eric',
-    'Karlsson',
-    'eric@slb.se',
-    'kingafro',
-    'dungeon master'
-  );
-
-INSERT INTO
-  tokens (account_id, token)
-VALUES
-  (3, 'a869be19-2439-4126-8117-fd9cf6ebce7c');
-
-INSERT INTO
-  accounts (name, surname, email, password, security_answer)
-VALUES
-  (
-    'Patrik',
-    'Lundell',
-    'patrik@slb.se',
-    'mrmcevil',
-    'designer'
-  );
-
-INSERT INTO
-  tokens (account_id, token)
-VALUES
-  (4, 'fe60f688-dd1c-4d01-9093-87caea60176d');
+  (2, '9791aa08-ad86-488a-a8d4-053090a6bc8c');

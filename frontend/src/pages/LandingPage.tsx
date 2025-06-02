@@ -1,8 +1,6 @@
 import styled from "styled-components";
-
 import LoginForm from "../components/LoginForm";
 import CreateAccount from "../components/CreateAccount";
-
 import { useState } from "react";
 import ChangePassword from "../components/ChangePassword";
 const Main = styled.main`
@@ -33,7 +31,7 @@ function LandingPage() {
   return (
     <>
       <Main>
-        <h1>
+        <h1 style={{color:"#f2771f"}}>
           Welcome to <br />
           <span style={{ fontSize: "66px", fontFamily: "pageFontBold" }}>
             Dream Lore
@@ -111,7 +109,8 @@ function LandingPage() {
         </div>
 
 
-        <p style={{marginTop:"20vh"}}>All Rights Reserved by the DreamLore Company©</p>
+
+      <footer><p style={{marginTop:"20vh"}}>All Rights Reserved by <br />the DreamLore Company©</p></footer>
       </Main>
     </>
   );
