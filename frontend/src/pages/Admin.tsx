@@ -108,15 +108,15 @@ function Admin() {
         );
 
         const updatedPost = await tokenResponse.text();
-        //console.log(updatedPost);
+
 
         if (updatedPost) {
-          //console.log("post updated", updatedPost);
+
           setPostRes(updatedPost);
           setFeatureInput("");
           setOptiInput("");
           setUpcomingInput("");
-          //console.log(theFormData.feature);
+
           setSafetyBox(false);
           setDeclarePost(true);
           setUpdatePost((prev) => !prev);
@@ -210,6 +210,7 @@ function Admin() {
                   fontWeight: "bold",
                   cursor: "pointer",
                 }}
+                value="Update"
                 type="submit"
               />
             </div>

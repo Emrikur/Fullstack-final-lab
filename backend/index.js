@@ -74,12 +74,9 @@ app.post("/login", (request, response) => __awaiter(void 0, void 0, void 0, func
         const checkDb = validateLogin.find((user) => user.email === request.body.email &&
             user.password === request.body.password);
         let validData = true;
-        //console.log(validateLogin[0])
         if (checkDb) {
-            console.log("Validate Login", validateLogin[0]);
-            console.log("You're in");
-            // const getName = await database.all("SELECT * FROM accounts;");
-            //console.log("User LOGIN info", validateLogin[0])
+            // console.log("Validate Login", validateLogin[0]);
+            // console.log("You're in");
             response.send({ user: validateLogin[0] });
         }
         else {

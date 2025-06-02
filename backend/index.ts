@@ -29,6 +29,7 @@ app.use(express.json());
 
 app.post("/login", async (request, response) => {
   console.log("Backend recieved body:", request.body);
+
   if (request.body.email && request.body.password) {
     const validateLogin = await database.all(
       `SELECT * FROM accounts WHERE email=? AND password=?;`,
@@ -40,12 +41,10 @@ app.post("/login", async (request, response) => {
         user.password === request.body.password
     );
     let validData = true;
-    //console.log(validateLogin[0])
+
     if (checkDb) {
-      console.log("Validate Login", validateLogin[0]);
-      console.log("You're in");
-      // const getName = await database.all("SELECT * FROM accounts;");
-      //console.log("User LOGIN info", validateLogin[0])
+      // console.log("Validate Login", validateLogin[0]);
+      // console.log("You're in");
       response.send({ user: validateLogin[0] });
     } else {
       validData = false;
@@ -64,54 +63,49 @@ app.get("/accounts/admin", async (request, response) => {
   response.send(getAdminBroadcast);
 });
 
-
 app.post("/horoscope/day", async (request, response) => {
-
-  const URL = request.body.horoscope
+  const URL = request.body.horoscope;
 
   fetch(`${URL}`)
     .then((response) => response.json())
     .then((result) => {
-      const horoscopeData = result.data
+      const horoscopeData = result.data;
       //console.log(horoscopeData);
 
       //console.log(adminBroadcast)
-      response.send({response: horoscopeData});
+      response.send({ response: horoscopeData });
     });
   //console.log(request.body.horoscope);
-//console.log(horoscopeData)
+  //console.log(horoscopeData)
 });
-
 
 app.post("/horoscope/week", async (request, response) => {
-   const URL = request.body.horoscope
+  const URL = request.body.horoscope;
 
   fetch(`${URL}`)
     .then((response) => response.json())
     .then((result) => {
-      const horoscopeData = result.data
+      const horoscopeData = result.data;
       //console.log(horoscopeData);
 
       //console.log(adminBroadcast)
-      response.send({response: horoscopeData});
+      response.send({ response: horoscopeData });
     });
 });
-
 
 app.post("/horoscope/month", async (request, response) => {
-   const URL = request.body.horoscope
+  const URL = request.body.horoscope;
 
   fetch(`${URL}`)
     .then((response) => response.json())
     .then((result) => {
-      const horoscopeData = result.data
+      const horoscopeData = result.data;
       //console.log(horoscopeData);
 
       //console.log(adminBroadcast)
-      response.send({response: horoscopeData});
+      response.send({ response: horoscopeData });
     });
 });
-
 
 app.put("/accounts/admin", async (request, response) => {
   console.log(request.body.user_id);

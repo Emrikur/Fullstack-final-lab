@@ -15,7 +15,6 @@ function LoginForm() {
   const navigate = useNavigate();
 
   const [invalidInput, setinvalidInput] = useState(false);
-
   const [formEmail, setFormEmail] = useState("");
   const [formPassword, setFormPassword] = useState("");
 

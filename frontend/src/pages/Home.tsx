@@ -14,11 +14,27 @@ color:#FFD447;
 margin-left:25px;
 `;
 
+const DisplayDreamLink = styled.div`
+
+
+ p{
+   background-color:#55496668;
+   margin:0;
+   text-align:left;
+   padding: 17px;
+   color:#F4F1ED;
+ }
+`
+
 const Welcomer = styled.div`
   display: flex;
   gap: 15px;
   flex-direction: column;
   margin-bottom:auto;
+
+
+
+
 `;
 
 function Home() {
@@ -127,7 +143,7 @@ const handleClickB = () => {
             style={{
               width: "70vw",
               minHeight: "14vh",
-              backgroundColor: " rgb(151, 135, 171,0.7)",
+              backgroundColor: " rgb(151, 135, 171, 0.7)",
               borderRadius: "3px",
             }}
 
@@ -140,12 +156,12 @@ const handleClickB = () => {
               <img onClick={handleClickA} style={{transition:"transform .3s",transform:`rotate(${arrowRotate1 ? 90 : 0}deg)`,width:"auto",height:"18px",marginLeft:"auto", marginRight:"25px",cursor:"pointer"}} src={Arrow} alt="Arrow" />
             </div>
 
-            <div>
-            <p style={{textAlign:"left", marginLeft:"10px",padding: "7px",color:"#F4F1ED" }}>
+            <DisplayDreamLink>
+            <p>
               Here, you can write down your dreams and revisit past entries anytime. Capture your imagination, reflect on your thoughts, and explore your inner world.
             </p>
 
-            </div>
+            </DisplayDreamLink>
           </div>
           :
           <div
@@ -184,7 +200,7 @@ const handleClickB = () => {
 
             </div>
             <div>
-              <p style={{textAlign:"left", padding: "7px", marginLeft:"10px",color:"#F4F1ED" }}> Welcome to your personalized horoscope feature, where the stars guide you through life’s twists and turns. <br />Choose between daily, weekly, or monthly insights tailored to your zodiac sign. Whether you want a quick glimpse <br />or a broader forecast, the universe has something just for you.</p>
+              <p style={{textAlign:"left", padding: "17px", margin:"0",color:"#F4F1ED",backgroundColor:"#55496668" }}> Welcome to your personalized horoscope feature, where the stars guide you through life’s twists and turns. <br />Choose between daily, weekly, or monthly insights tailored to your zodiac sign. Whether you want a quick glimpse <br />or a broader forecast, the universe has something just for you.</p>
             </div>
           </div>
           :
