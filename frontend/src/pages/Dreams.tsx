@@ -85,7 +85,8 @@ function Dreams() {
   const transcribeUserData = JSON.parse(getUser ?? "{}");
 
   const dreamPost = () => toast("Dream posted to journal");
-  const postDeleted = () => toast("Journal entry deleted");
+  let deleteMessage = "";
+  const postDeleted = () => toast(deleteMessage);
 
   const [journalDb, setJournalDb] = useState([]);
   const [graphActive, setGraphActive] = useState(false);
@@ -110,14 +111,14 @@ function Dreams() {
         });
 
         const responseData = await dreamResponse.json();
-        //console.log(responseData.dbEntries);
+
         setJournalDb(responseData.dbEntries);
-        //console.log("db entries", journalDb);
+
       } catch (error) {
         console.error("data is not valid", error);
       }
     })();
-  }, [updatePost]);
+  }, [transcribeUserData.id, updatePost]);
 
   function toggleCreated() {
     setTimeout(() => {
@@ -206,8 +207,6 @@ function Dreams() {
 
     (async () => {
       try {
-        console.log(e);
-        console.log(transcribeUserData.id);
 
         const dreamResponse = await fetch(
           "http://localhost:3000/dreams/delete",
@@ -225,9 +224,9 @@ function Dreams() {
         );
 
         const responseData = await dreamResponse.json();
-
+        deleteMessage = responseData.answer
         setUpdatePost((prev) => !prev);
-        console.log(responseData);
+
         postDeleted();
       } catch (error) {
         console.error("data is not valid", error);
@@ -236,7 +235,7 @@ function Dreams() {
   }
 
   useEffect(() => {
-    console.log(journalDb);
+
   }, [journalDb]);
 
   return (
@@ -472,7 +471,7 @@ function Dreams() {
           </p>
 
           {journalDb ? (
-            journalDb.reverse().map((allEntries: JourneyDbProps) => (
+            journalDb.slice(0).reverse().map((allEntries: JourneyDbProps) => (
               <div
                 style={{
                   backgroundColor: "#3f2964",

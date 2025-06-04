@@ -7,30 +7,38 @@ import { useState, useEffect } from "react";
     upcoming:string
 }
 
+interface NewsProps {
+  updateNews:boolean
+}
 
-function News(){
+
+function News(updated:NewsProps){
 
 
   const [adminBroadcast,setAdminBroadcast] = useState<BroadcastProps | null> (null);
-  const [,setPageUpdate] = useState(false)
+  const [pageUpdate,setPageUpdate] = useState(false)
 
 
 
-   useEffect(() => {
+
+  useEffect(() => {
 
 
     fetch(`http://localhost:3000/accounts/admin`)
     .then((response) => response.json())
     .then((result) => {
-      //console.log(result[0]);
+
+
       setAdminBroadcast(result[0])
-      setPageUpdate(prev => !prev)
-      //console.log(adminBroadcast)
+
+
     });
 
-  },[])
+  },[pageUpdate])
 
-
+  useEffect(() => {
+setPageUpdate(prev => !prev)
+  },[updated])
 
 
   return (

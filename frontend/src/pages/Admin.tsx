@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import News from "../components/News";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 interface AdminProps {
@@ -10,6 +10,8 @@ interface AdminProps {
   opti: string;
   upcoming: string;
 }
+
+
 
 const Heading = styled.h1`
   margin-left: auto;
@@ -68,7 +70,7 @@ function Admin() {
     opti: "",
     upcoming: "",
   });
-  const [, setUpdatePost] = useState(false);
+  const [updatePost, setUpdatePost] = useState(false);
   const [postRes, setPostRes] = useState("");
 
   const patchUpdated = () => toast(`${postRes}`);
@@ -139,6 +141,11 @@ function Admin() {
   function Upcoming(e: { target: { value: string } }) {
     setUpcomingInput(e.target.value);
   }
+
+  useEffect(() => {
+
+
+  },[updatePost])
 
   return (
     <>
@@ -255,7 +262,7 @@ function Admin() {
       <div
         style={{ marginBottom: "20px", marginTop: "55px", border: "solid 2px#f2771f" }}
       >
-        <News />
+        <News updateNews={updatePost} />
       </div>
 
       <footer>

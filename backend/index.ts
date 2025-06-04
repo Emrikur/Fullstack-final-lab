@@ -20,15 +20,13 @@ app.use(cors());
 
 app.get("/dashboard/:user", async (request, response) => {
   console.log(request.params.user);
-  // const getName = await database.all("SELECT * FROM accounts;");
-  // response.send(`${getName[0].name}`);
+
   response.send(request.params.user);
 });
 
 app.use(express.json());
 
 app.post("/login", async (request, response) => {
-  console.log("Backend recieved body:", request.body);
 
   if (request.body.email && request.body.password) {
     const validateLogin = await database.all(
@@ -43,8 +41,7 @@ app.post("/login", async (request, response) => {
     let validData = true;
 
     if (checkDb) {
-      // console.log("Validate Login", validateLogin[0]);
-      // console.log("You're in");
+
       response.send({ user: validateLogin[0] });
     } else {
       validData = false;
@@ -58,7 +55,6 @@ app.post("/login", async (request, response) => {
 });
 app.get("/accounts/admin", async (request, response) => {
   const getAdminBroadcast = await database.all(`SELECT * FROM broadcasts;`);
-  console.log(getAdminBroadcast);
 
   response.send(getAdminBroadcast);
 });
@@ -70,13 +66,9 @@ app.post("/horoscope/day", async (request, response) => {
     .then((response) => response.json())
     .then((result) => {
       const horoscopeData = result.data;
-      //console.log(horoscopeData);
 
-      //console.log(adminBroadcast)
       response.send({ response: horoscopeData });
     });
-  //console.log(request.body.horoscope);
-  //console.log(horoscopeData)
 });
 
 app.post("/horoscope/week", async (request, response) => {
@@ -86,9 +78,7 @@ app.post("/horoscope/week", async (request, response) => {
     .then((response) => response.json())
     .then((result) => {
       const horoscopeData = result.data;
-      //console.log(horoscopeData);
 
-      //console.log(adminBroadcast)
       response.send({ response: horoscopeData });
     });
 });
@@ -100,18 +90,13 @@ app.post("/horoscope/month", async (request, response) => {
     .then((response) => response.json())
     .then((result) => {
       const horoscopeData = result.data;
-      //console.log(horoscopeData);
 
-      //console.log(adminBroadcast)
       response.send({ response: horoscopeData });
     });
 });
 
 app.put("/accounts/admin", async (request, response) => {
-  console.log(request.body.user_id);
-  console.log(request.body.feature);
-  console.log(request.body.optimization);
-  console.log(request.body.upcoming);
+
 
   if (
     request.body.user_id &&
@@ -149,13 +134,6 @@ app.put("/accounts/admin", async (request, response) => {
 
 app.post("/accounts/create", async (request, response) => {
   let match = true;
-
-  console.log(request.body.name);
-  console.log(request.body.surname);
-  console.log(request.body.email);
-  console.log(request.body.password);
-  console.log(request.body.secAnswer);
-  console.log(request.body.zodiac);
 
   if (
     request.body.name &&
@@ -198,7 +176,6 @@ app.post("/accounts/create", async (request, response) => {
           [`${request.body.email}`]
         );
 
-        //console.log(getAccount[0].id);
         const setToken = await database.all(
           `INSERT INTO tokens (account_id, token) VALUES (${
             getAccount[0].id
@@ -223,14 +200,14 @@ app.post("/accounts/validation", async (request, response) => {
     "SELECT id FROM accounts WHERE security_answer=? AND email=?",
     [request.body.securityAnswer, request.body.formEmail]
   );
-  console.log("Användar-id:", getName[0].id);
+
 
   if (getName) {
     const getToken = await database.all(
       "SELECT token FROM tokens WHERE account_id=?",
       [getName[0].id]
     );
-    console.log(getToken[0].token);
+
     response.send({ response: getToken[0].token });
   } else {
     response.send({ response: "Invalid output" });
@@ -238,7 +215,7 @@ app.post("/accounts/validation", async (request, response) => {
 });
 app.post("/accounts/validation/token", async (request, response) => {
   const getToken = await database.all("SELECT * FROM tokens");
-  console.log("Användar-tokens:", getToken);
+
 
   if (
     getToken.find((userToken) => userToken.token === request.body.userToken)
@@ -246,11 +223,11 @@ app.post("/accounts/validation/token", async (request, response) => {
     const validUser = getToken.find(
       (userToken) => userToken.token === request.body.userToken
     );
-    console.log("The valid user", validUser.name);
+
     const getName = await database.all("SELECT name FROM accounts WHERE id=?", [
       getToken[0].account_id,
     ]);
-    console.log(getName[0].name);
+
     response.send({ response: getName[0].name });
   } else {
     response.send({ response: "Invalid output" });
@@ -263,19 +240,15 @@ app.patch("/accounts/update", async (request, response) => {
     [request.body.theUserToken]
   );
 
-  console.log(getId);
-
   const setPassword = await database.all(
     `UPDATE accounts SET password=? WHERE id=?`,
     [request.body.password, getId[0].account_id]
   );
-  // console.log("User Password "+ request.body.password)
-  // console.log("UserToken "+ request.body.theUserToken)
   response.send({ response: "Password Updated" });
 });
 
 app.post("/dreams", async (request, response) => {
-  console.log(request.body.activeUserId);
+
   const setToken = await database.all(
     `SELECT * FROM dreams WHERE account_id=?;`,
     [`${request.body.activeUserId}`]
@@ -286,7 +259,7 @@ app.post("/dreams", async (request, response) => {
   response.send({ dbEntries: setToken });
 });
 app.post("/dreams/create", async (request, response) => {
-  console.log(request.body.formData);
+
   const setEntry = await database.all(
     `INSERT INTO dreams (account_id, title, text, tag) VALUES (${request.body.activeUserId}, "${request.body.formData.dreamTitle}", "${request.body.formData.dreamContent}", "${request.body.formData.dreamTags}");`
   );
@@ -295,8 +268,6 @@ app.post("/dreams/create", async (request, response) => {
 });
 
 app.delete("/dreams/delete", async (request, response) => {
-  // console.log(request.body.id_Of_Dream)
-  // console.log(request.body.activeUserId)
 
   if (request.body.id_Of_Dream && request.body.activeUserId) {
     const deletePost = await database.all(
@@ -304,7 +275,7 @@ app.delete("/dreams/delete", async (request, response) => {
       [request.body.id_Of_Dream, request.body.activeUserId]
     );
 
-    response.send({ answer: "Post deleted" });
+    response.send({ answer: "Journal entry deleted" });
   } else {
     response.status(418);
     response.send({ InvalidRequest: "I'm a teapot!" });

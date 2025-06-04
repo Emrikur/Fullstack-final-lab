@@ -16,30 +16,28 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar";
 
 interface HoroscopeDayProps {
-  date:string,
-  horoscope_data:string
+  date: string;
+  horoscope_data: string;
 }
 interface HoroscopeWeekProps {
-  week:string,
-  horoscope_data:string
+  week: string;
+  horoscope_data: string;
 }
 interface HoroscopeMonthProps {
-  month:string,
-  horoscope_data:string
+  month: string;
+  horoscope_data: string;
 }
 
-
 const ZodiacContainer = styled.div`
-
-height:auto;
-margin:15px auto;
+  height: auto;
+  margin: 15px auto;
 
   img {
-width:300px;
-    border:#f9cf4a solid 5px;
+    width: 300px;
+    border: #f9cf4a solid 5px;
     box-shadow: 0px 0px 25px 2px #f9cf4a;
-    border-radius:100%;
-    padding:5px;
+    border-radius: 100%;
+    padding: 5px;
   }
 `;
 
@@ -86,35 +84,33 @@ const ChooseTimespan = styled.div`
 const ZodiacInfo = styled.div`
   padding: 15px;
   margin: 25px auto;
-  width:90%;
-
+  width: 90%;
 `;
 function Horoscope() {
   const getUser = localStorage.getItem("currentUser");
-  //console.log(typeof getUser);
+
   const transcribeUserData = JSON.parse(getUser ?? "{}");
-  //console.log("From localStorage ", transcribeUserData);
+
   const [zodiacSign] = useState(transcribeUserData.zodiac);
   const [displayTimespan, setDisplayTimespan] = useState("");
   const [, setPageUpdate] = useState(false);
   const [horoscopeDay, setHoroscopeDay] = useState<HoroscopeDayProps>({
-    date:"",
-    horoscope_data:"",
+    date: "",
+    horoscope_data: "",
   });
   const [horoscopeWeek, setHoroscopeWeek] = useState<HoroscopeWeekProps>({
-    week:"",
-    horoscope_data:""
+    week: "",
+    horoscope_data: "",
   });
   const [horoscopeMonth, setHoroscopeMonth] = useState<HoroscopeMonthProps>({
-    month:"",
-    horoscope_data:""
+    month: "",
+    horoscope_data: "",
   });
 
   function handleTimespan(e: { name: string }) {
-    console.log(e.name);
+
 
     if (e.name === "day") {
-
       (async () => {
         try {
           const dreamResponse = await fetch(
@@ -132,7 +128,7 @@ function Horoscope() {
           );
 
           const responseData = await dreamResponse.json();
-          console.log(responseData.response);
+
           setHoroscopeDay(responseData.response);
 
           setPageUpdate((prev) => !prev);
@@ -159,7 +155,7 @@ function Horoscope() {
           );
 
           const responseData = await dreamResponse.json();
-          console.log(responseData.response);
+
           setHoroscopeWeek(responseData.response);
 
           setPageUpdate((prev) => !prev);
@@ -186,7 +182,7 @@ function Horoscope() {
           );
 
           const responseData = await dreamResponse.json();
-          console.log(responseData.response);
+
           setHoroscopeMonth(responseData.response);
 
           setPageUpdate((prev) => !prev);
@@ -200,14 +196,20 @@ function Horoscope() {
 
   return (
     <>
-    <div style={{display:"flex", flexDirection:"column", alignItems:"flex-end"}}>
-<Navbar/>
-<Link to={`/dashboard/${transcribeUserData.name}`}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+        }}
+      >
+        <Navbar />
+        <Link to={`/dashboard/${transcribeUserData.name}`}>
           Back to main page
         </Link>
-        </div>
+      </div>
       <main>
-        <h1 style={{color:"#e06f25"}}>Horoscope</h1>
+        <h1 style={{ color: "#e06f25" }}>Horoscope</h1>
 
         <ZodiacContainer>
           {zodiacSign === "Aries" ? (
@@ -252,12 +254,18 @@ function Horoscope() {
             </div>
           ) : zodiacSign === "Sagittarius" ? (
             <div>
-              <img src={Sagittarius} alt="An image of the Sagittarius zodiac sign" />
+              <img
+                src={Sagittarius}
+                alt="An image of the Sagittarius zodiac sign"
+              />
               <h2>Sagittarius</h2>
             </div>
           ) : zodiacSign === "Capricorn" ? (
             <div>
-              <img src={Capricorn} alt="An image of the Capricorn zodiac sign" />
+              <img
+                src={Capricorn}
+                alt="An image of the Capricorn zodiac sign"
+              />
               <h2>Capricorn</h2>
             </div>
           ) : zodiacSign === "Aquarius" ? (
@@ -274,23 +282,25 @@ function Horoscope() {
             <div>Nothing chosen</div>
           )}
         </ZodiacContainer>
+
         <ChooseTimespan>
           <div id="choose-timespan-big-brother">
-            <div style={{cursor:"pointer"}}
+            <div
+              style={{ cursor: "pointer" }}
               onClick={() => handleTimespan({ name: "day" })}
               id="choose-timespan-day"
             >
               day
             </div>
             <div
-             style={{cursor:"pointer"}}
+              style={{ cursor: "pointer" }}
               onClick={() => handleTimespan({ name: "week" })}
               id="choose-timespan-week"
             >
               week
             </div>
             <div
-             style={{cursor:"pointer"}}
+              style={{ cursor: "pointer" }}
               onClick={() => handleTimespan({ name: "month" })}
               id="choose-timespan-month"
             >
@@ -298,23 +308,26 @@ function Horoscope() {
             </div>
           </div>
         </ChooseTimespan>
+
         <ZodiacInfo>
           {displayTimespan === "Day" ? (
             <div>
               <h3 style={{ color: "#ffd447" }}>{horoscopeDay.date}</h3>
-              <p style={{fontFamily:"sans-serif", textAlign: "left" }}>{horoscopeDay.horoscope_data}</p>
+              <p style={{ fontFamily: "sans-serif", textAlign: "left" }}>
+                {horoscopeDay.horoscope_data}
+              </p>
             </div>
           ) : displayTimespan === "Week" ? (
             <div key={0}>
               <h3 style={{ color: "#ffd447" }}>{horoscopeWeek.week}</h3>
-              <p style={{fontFamily:"sans-serif", textAlign: "left" }}>
+              <p style={{ fontFamily: "sans-serif", textAlign: "left" }}>
                 {horoscopeWeek.horoscope_data}
               </p>
             </div>
           ) : displayTimespan === "Month" ? (
             <div key={0}>
               <h3 style={{ color: "#ffd447" }}>{horoscopeMonth.month}</h3>
-              <p style={{ fontFamily:"sans-serif", textAlign: "left" }}>
+              <p style={{ fontFamily: "sans-serif", textAlign: "left" }}>
                 {horoscopeMonth.horoscope_data}
               </p>
             </div>

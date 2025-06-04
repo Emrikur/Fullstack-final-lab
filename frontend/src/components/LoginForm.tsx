@@ -47,7 +47,6 @@ function LoginForm() {
           });
 
           const responseData = await rawResponse.json();
-          console.log("Response data ", responseData);
 
           if (
             responseData.user.email === formEmail &&

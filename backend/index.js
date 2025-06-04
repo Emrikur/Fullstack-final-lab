@@ -62,21 +62,16 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.get("/dashboard/:user", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(request.params.user);
-    // const getName = await database.all("SELECT * FROM accounts;");
-    // response.send(`${getName[0].name}`);
     response.send(request.params.user);
 }));
 app.use(express_1.default.json());
 app.post("/login", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Backend recieved body:", request.body);
     if (request.body.email && request.body.password) {
         const validateLogin = yield database.all(`SELECT * FROM accounts WHERE email=? AND password=?;`, [request.body.email, request.body.password]);
         const checkDb = validateLogin.find((user) => user.email === request.body.email &&
             user.password === request.body.password);
         let validData = true;
         if (checkDb) {
-            // console.log("Validate Login", validateLogin[0]);
-            // console.log("You're in");
             response.send({ user: validateLogin[0] });
         }
         else {
@@ -92,7 +87,6 @@ app.post("/login", (request, response) => __awaiter(void 0, void 0, void 0, func
 }));
 app.get("/accounts/admin", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const getAdminBroadcast = yield database.all(`SELECT * FROM broadcasts;`);
-    console.log(getAdminBroadcast);
     response.send(getAdminBroadcast);
 }));
 app.post("/horoscope/day", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
@@ -101,12 +95,8 @@ app.post("/horoscope/day", (request, response) => __awaiter(void 0, void 0, void
         .then((response) => response.json())
         .then((result) => {
         const horoscopeData = result.data;
-        //console.log(horoscopeData);
-        //console.log(adminBroadcast)
         response.send({ response: horoscopeData });
     });
-    //console.log(request.body.horoscope);
-    //console.log(horoscopeData)
 }));
 app.post("/horoscope/week", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const URL = request.body.horoscope;
@@ -114,8 +104,6 @@ app.post("/horoscope/week", (request, response) => __awaiter(void 0, void 0, voi
         .then((response) => response.json())
         .then((result) => {
         const horoscopeData = result.data;
-        //console.log(horoscopeData);
-        //console.log(adminBroadcast)
         response.send({ response: horoscopeData });
     });
 }));
@@ -125,16 +113,10 @@ app.post("/horoscope/month", (request, response) => __awaiter(void 0, void 0, vo
         .then((response) => response.json())
         .then((result) => {
         const horoscopeData = result.data;
-        //console.log(horoscopeData);
-        //console.log(adminBroadcast)
         response.send({ response: horoscopeData });
     });
 }));
 app.put("/accounts/admin", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(request.body.user_id);
-    console.log(request.body.feature);
-    console.log(request.body.optimization);
-    console.log(request.body.upcoming);
     if (request.body.user_id &&
         request.body.feature.length >= 6 &&
         request.body.optimization.length >= 6 &&
@@ -162,12 +144,6 @@ app.put("/accounts/admin", (request, response) => __awaiter(void 0, void 0, void
 }));
 app.post("/accounts/create", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     let match = true;
-    console.log(request.body.name);
-    console.log(request.body.surname);
-    console.log(request.body.email);
-    console.log(request.body.password);
-    console.log(request.body.secAnswer);
-    console.log(request.body.zodiac);
     if (request.body.name &&
         request.body.surname &&
         request.body.email &&
@@ -193,7 +169,6 @@ app.post("/accounts/create", (request, response) => __awaiter(void 0, void 0, vo
          "${request.body.zodiac}");
          `);
                 const getAccount = yield database.all(`SELECT id FROM accounts WHERE email=?;`, [`${request.body.email}`]);
-                //console.log(getAccount[0].id);
                 const setToken = yield database.all(`INSERT INTO tokens (account_id, token) VALUES (${getAccount[0].id},'${(0, uuid_1.v4)()}');`);
                 match = true;
                 response.status(201);
@@ -212,10 +187,8 @@ app.post("/accounts/create", (request, response) => __awaiter(void 0, void 0, vo
 }));
 app.post("/accounts/validation", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const getName = yield database.all("SELECT id FROM accounts WHERE security_answer=? AND email=?", [request.body.securityAnswer, request.body.formEmail]);
-    console.log("Användar-id:", getName[0].id);
     if (getName) {
         const getToken = yield database.all("SELECT token FROM tokens WHERE account_id=?", [getName[0].id]);
-        console.log(getToken[0].token);
         response.send({ response: getToken[0].token });
     }
     else {
@@ -224,14 +197,11 @@ app.post("/accounts/validation", (request, response) => __awaiter(void 0, void 0
 }));
 app.post("/accounts/validation/token", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const getToken = yield database.all("SELECT * FROM tokens");
-    console.log("Användar-tokens:", getToken);
     if (getToken.find((userToken) => userToken.token === request.body.userToken)) {
         const validUser = getToken.find((userToken) => userToken.token === request.body.userToken);
-        console.log("The valid user", validUser.name);
         const getName = yield database.all("SELECT name FROM accounts WHERE id=?", [
             getToken[0].account_id,
         ]);
-        console.log(getName[0].name);
         response.send({ response: getName[0].name });
     }
     else {
@@ -240,30 +210,23 @@ app.post("/accounts/validation/token", (request, response) => __awaiter(void 0, 
 }));
 app.patch("/accounts/update", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const getId = yield database.all(`SELECT account_id FROM tokens WHERE token=?`, [request.body.theUserToken]);
-    console.log(getId);
     const setPassword = yield database.all(`UPDATE accounts SET password=? WHERE id=?`, [request.body.password, getId[0].account_id]);
-    // console.log("User Password "+ request.body.password)
-    // console.log("UserToken "+ request.body.theUserToken)
     response.send({ response: "Password Updated" });
 }));
 app.post("/dreams", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(request.body.activeUserId);
     const setToken = yield database.all(`SELECT * FROM dreams WHERE account_id=?;`, [`${request.body.activeUserId}`]);
     console.log(setToken);
     // const getName = await database.all("SELECT * FROM accounts;");
     response.send({ dbEntries: setToken });
 }));
 app.post("/dreams/create", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(request.body.formData);
     const setEntry = yield database.all(`INSERT INTO dreams (account_id, title, text, tag) VALUES (${request.body.activeUserId}, "${request.body.formData.dreamTitle}", "${request.body.formData.dreamContent}", "${request.body.formData.dreamTags}");`);
     response.send({ response: "New post created" });
 }));
 app.delete("/dreams/delete", (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log(request.body.id_Of_Dream)
-    // console.log(request.body.activeUserId)
     if (request.body.id_Of_Dream && request.body.activeUserId) {
         const deletePost = yield database.all(`DELETE FROM dreams WHERE dream_id=? AND account_id=?;`, [request.body.id_Of_Dream, request.body.activeUserId]);
-        response.send({ answer: "Post deleted" });
+        response.send({ answer: "Journal entry deleted" });
     }
     else {
         response.status(418);
