@@ -51,7 +51,6 @@ const RecoverPassword = styled.div`
     flex-direction: column;
   }
 `;
-
 const GiveToken = styled.div`
   display: flex;
   flex-direction: column;
@@ -125,10 +124,12 @@ const UpdatePassword = styled.div`
 `;
 
 function ChangePassword() {
+
+
   const [toggleForm, setToggleForm] = useState("verifyUser");
   const [emailSent, setEmailSent] = useState("");
   const [answerSent, setAnswerSent] = useState("");
-  const [, setUpdatePost] = useState(false);
+  const [updatePost, setUpdatePost] = useState(false);
   const [userToken, setUserToken] = useState("");
   const [theUserName, settheUserName] = useState("");
   const [matchingPassword, setMatchingPassword] = useState(false);
@@ -160,15 +161,13 @@ function ChangePassword() {
         );
 
         const token = await dreamResponse.json();
-        setUpdatePost((prev) => !prev);
 
         setEmailSent("");
         setAnswerSent("");
         setUserToken(token.response);
-        // alert("Your user token is: "+ token.response + " Copy and paste in the next field")
+        setUpdatePost((prev) => !prev);
 
-        //console.log(token.response);
-        console.log(userToken);
+
         if (userToken) {
 
           setToggleForm("Token");
@@ -220,7 +219,7 @@ function ChangePassword() {
       }
     })();
 
-    //setToggleForm("UpdatePassword")
+
   }
 
   function UpdateThePassword() {
@@ -244,7 +243,7 @@ function ChangePassword() {
 
           const updatedPassword = await tokenResponse.json();
 
-          console.log("password updated", updatedPassword.response);
+          //console.log("password updated", updatedPassword.response);
           setUpdatePost((prev) => !prev);
           if (updatedPassword.response) {
             //console.log(theUserName)
@@ -262,6 +261,7 @@ function ChangePassword() {
   }
 
   useEffect(() => {
+
     if (
       newPassword === reNewPassword &&
       newPassword.length === reNewPassword.length &&
@@ -273,6 +273,12 @@ function ChangePassword() {
       setMatchingPassword(false);
     }
   }, [newPassword, reNewPassword]);
+
+useEffect(()=> {
+
+
+},[updatePost])
+
   return (
     <>
       {toggleForm === "verifyUser" ? (

@@ -73,7 +73,7 @@ VALUES
   (
     'Joakim',
     'Erlandsson',
-    'joakim@slb.se',
+    'joakim@dlore.com',
     'mypassword',
     'pilot',
     'Aries',
@@ -85,7 +85,7 @@ VALUES
   (
     'Vanja',
     'Ferhatovic',
-    'vanja@slb.se',
+    'vanja@dlore.com',
     '123456',
     'security',
     'Taurus',

@@ -1,24 +1,11 @@
 "Dream Lore"
 
-En app där man kan skriva ner sina drömmar
+En app där man kan skriva ner sina drömmar samt se sitt horoskop för dagen/veckan/månaden.
+
 
 Funktioner:
 
 * Login/logout
-* Skapa "blogginlägg".
+* Skapa "blogginlägg"
 * redigera inlägg
-
-
-
-
-
-
-
-
-/* Color Theme Swatches in Hex */
-.Stylish-trendy-hipster-woman-traveler-in-a-felt-hat-with-brown-backpack-stands-on-the-background-of-the-mountains-and-uzungol-lake-in-Trabzon-during-Turkey-travel-1-hex { color: #120759; }
-.Stylish-trendy-hipster-woman-traveler-in-a-felt-hat-with-brown-backpack-stands-on-the-background-of-the-mountains-and-uzungol-lake-in-Trabzon-during-Turkey-travel-2-hex { color: #5681A6; }
-.Stylish-trendy-hipster-woman-traveler-in-a-felt-hat-with-brown-backpack-stands-on-the-background-of-the-mountains-and-uzungol-lake-in-Trabzon-during-Turkey-travel-3-hex { color: #C2E0F2; }
-.Stylish-trendy-hipster-woman-traveler-in-a-felt-hat-with-brown-backpack-stands-on-the-background-of-the-mountains-and-uzungol-lake-in-Trabzon-during-Turkey-travel-4-hex { color: #F2A057; }
-.Stylish-trendy-hipster-woman-traveler-in-a-felt-hat-with-brown-backpack-stands-on-the-background-of-the-mountains-and-uzungol-lake-in-Trabzon-during-Turkey-travel-5-hex { color: #401809; }
-
+* Se sitt horoskop

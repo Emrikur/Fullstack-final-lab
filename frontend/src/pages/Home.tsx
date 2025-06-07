@@ -111,7 +111,7 @@ const handleClickB = () => {
             </div>
 
 
-            <News/>
+            <News updateNews={false}/>
 
 
           </div>

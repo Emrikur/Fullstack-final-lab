@@ -8,11 +8,12 @@ position:right;
   text-decoration: underline;
   cursor: pointer;
 
-  /* &:hover{
-    transition-duration:0.5s;
-    font-size:18px;
-  } */
 `;
+
+const LogoutText = styled.p`
+position:right;
+
+`
 
 function Logout() {
 let cooldown = 2;
@@ -40,13 +41,13 @@ const [timerActive, setTimerActive] = useState(false)
     }, 1000);
 
 
-    //navOut();
+
   }
   return (
     <>
       <div style={{display:"flex", flexDirection:"row", alignItems:" center", gap:"15px"}}>
         {timerActive ?
-        <p>Logging out...</p>
+        <LogoutText>Logging out...</LogoutText>
         :
 
         <LogoutButton onClick={handleLogOut}>Logout</LogoutButton>
